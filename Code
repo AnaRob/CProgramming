@@ -1,0 +1,370 @@
+//Prototipos
+void ejercicio1();
+void ejercicio2();
+void ejercicio3();
+void ejercicio4();
+
+//Programa principal
+int main(void){
+    int opc;
+    do{
+        printf("\n---------------------------------------------------------------------------------------\n");
+        printf("					M E N U");
+        printf("\n---------------------------------------------------------------------------------------\n");
+        printf("1.-Ejercicio 1\n");
+        printf("2.-Ejercicio 2\n");
+        printf("3.-Ejercicio 3\n");
+        printf("4.-Ejercicio 3 Opcional\n");
+        printf("5.-Salir\n");
+        printf("Introduzca opcion (1-5)\n ");
+        fflush(stdin);
+        scanf("%d",&opc);
+        switch(opc){
+            case 1:
+            ejercicio1();
+            break;
+            case 2:
+            ejercicio2();
+            break;
+            case 3:
+            ejercicio3();
+            break;
+            case 4:
+            ejercicio4();
+            break;
+            case 5:
+            printf("\nFin del programa");
+            break;
+            default: 
+            printf("\nLa opcion introducida no es valida, vuelva a introducir la opcion deseada");
+        }
+    }while(opc!=5);
+    return 0;
+}
+
+//PROGRAMA 1:
+void ejercicio1(){
+	int l, i, j, k=0, h=0;
+	printf("\nHa seleccionado el ejercicio 1.\n");
+    //Pedir el lado
+    do{
+		printf("#Introduzca el tamano del lado del laberinto\n");
+		scanf("%d", &l);
+		if(l%4!=0 || l==0){//si el lado no es multiplo de 4, da error
+			printf("Laberinto imposible\n");
+			printf("=======================================================================================\n");
+		}		
+	}while((l%4)!=0 || l==0);
+    //Filas
+    for(i=0;i>=0;i=i+pow(-1,k)){ //Utilizo el pow para decrementar la i cuando haya impreso la mitad de las lineas
+        //Columnas
+        for(j=0;j>=0;j=j+pow(-1,h)){ //Utilizo el pow para decrementar la j cuando haya impreso a la mitad de las columnas
+            //Reservo las posiciones menores que i*2 (ejemplo: si i=4, j=0,1,2,...,8)
+            if(j<i*2){
+                //si j es multiplo de 4, printeo un "|" (y si no, espacios)
+                if(j%4==0){
+                    printf("|");
+                }else{
+                    printf(" ");
+                }
+            }else{
+                //si estamos en filas pares, y no estamos dibujando las posiciones reservadas, dibujamos guiones (y si no, espacios)
+                if(i%2==0){
+                    printf("-");
+                }else{
+                    printf(" ");
+                }
+            }
+            //si hemos dibujado la mitad de las columnas, decrementamos los valores de j cuando h=1
+            if(j==l-1 && h==0){
+                h=1;
+                //Añado una iteracion mas para que haga 1,2,3,4,4,3,2,1 (el 4 se repite)
+                //si no hago j=j+1, el caso limite (4) me da problemas, me daria 1,2,3,2,1
+                j=j+1;
+            }
+        }
+        printf("\n");
+        //Una vez hemos dibujado la fila completa, queremos volver a incrementar las j, por lo tanto, h=0
+        h=0;
+        //si hemos dibujado la mitad de las filas, decrementamos los valores de i cuando k=1
+        if(i==l/2-1 && k==0){
+            k=1;
+            //Añado una iteracion mas para que haga 1,2,3,4,4,3,2,1 (el 4 se repite)
+            //si no hago i=i+1, el caso limite (4) me da problemas, me daria 1,2,3,2,1
+            i=i+1;
+        }
+    }
+}
+
+//PROGRAMA 2
+void ejercicio2(){
+    //Definicion de variables
+    int p, m, digit, imparesP=0, paresP=0, imparesM=0, paresM=0, q, h, i, j, k, z, clave, valor;
+    //Pedida de datos
+    printf("\nHa seleccionado el ejercicio 2.\n");
+    printf("#Introduzca un numero de 7 digitos\n");
+    scanf("%d",&p);
+    if(p<1000000||p>10000000){ 
+        printf("=======================================================================================\n");
+        printf("Codigo no valido\n");
+    }else{
+        printf("#Introduzca un numero de 5 digitos\n");
+        scanf("%d",&m);
+        if(m<10000||m>100000){
+            printf("=======================================================================================\n");
+            printf("Codigo no valido\n");
+        }else{
+            //Paso 1-suma de numeros en posicion par del numero que papa pig introduce
+            for(i=6;i>=0;i--){
+                digit=p/pow(10,i);
+                p=p%(int)pow(10,i);  //pow es una funcion double y la operacion modulo se hace con enteros, asi que convierto pow a int     
+                if(i%2==0){
+                    paresP=paresP+digit;
+                }else{
+                    //Paso 2-suma de numeros en pocicion impar que papa pig introduce
+                    imparesP=imparesP+digit;
+                }
+              }
+            //Paso 1-suma de numeros en posicion impar del numero que mama pig introduce
+            for(j=4;j>=0;j--){
+                digit=m/pow(10,j);
+                m=m%(int)pow(10,j);     
+                if(j%2!=0){
+                    imparesM=imparesM+digit;
+                }else{
+                    //Paso 2-suma de numeros en posicion par del numero que mama pig introduce
+                    paresM=paresM+digit;
+                }
+            }
+            printf("Papa Pig: la suma de pares es %d y la suma de impares es %d \n",paresP,imparesP);
+            printf("Mama Pig: la suma de pares es %d y la suma de impares es %d \n",paresM,imparesM);
+            printf("=======================================================================================\n");
+            
+			printf("RESULTADOS:\n");
+            //Sumamos los resultados del paso 1
+            q=paresP+imparesM;
+            printf("El resultado del paso 1 es: %d \n",q);
+
+            //Sumamos los resultados del paso 2
+            h=imparesP+paresM;
+            printf("El resultado del paso 2 es: %d \n",h);
+
+            //Paso 3, multiplico el paso 2 por 3
+            printf("El resultado del paso 3 es: %d \n",h*3);
+
+            //Paso 4, sumo el paso 1 mas el paso 3
+            k=q+h*3;
+            printf("El resultado del paso 4 es: %d \n",k);
+            
+            //Paso 5-averiguo el numero que hay que añadir al resultado del paso 4 para obtener un multiplo de 10 = clave
+			if(k%10!=0){
+				clave=(10*(k/10)+10)-k;
+			}else{
+				clave=0;
+			}
+            printf("Para abrir la zona de juegos debe introducir el valor %d \n",clave);
+            printf("=======================================================================================\n");
+
+            //Pedimos la clave al usuario (usamos un do while)
+            do{
+                printf("Introduzca la clave \n");
+                scanf("%d", &valor);
+                if (valor==clave){
+                    printf("Clave correcta, bienvenido a la zona de juegos =)");
+                }else{
+                    printf("Clave erronea\n");
+                    printf("=======================================================================================\n");
+                }                           
+            }while(valor!=clave);
+        }             
+    }
+}
+
+//PROGRAMA 3
+//Definición de la estructura 
+struct objeto {
+    int x;
+    int y;
+};
+struct objeto movetoTarget(struct objeto target, struct objeto robot);
+void ejercicio3(){
+    int d1, d2; 
+    //Declaración de variables con esta estructura 
+    struct objeto j1, j2, robot, target1, target2;
+    robot.x=15;
+    robot.y=15;
+
+    //Para darle a j1 y j2 valores aleatorios entre 0 y 30:
+	time_t t;
+	srand((unsigned) time(&t));
+	
+    j1.x=(rand()%(30))+1;
+    j1.y=(rand()%(30))+1;
+	j2.x=(rand()%(30))+1;
+	j2.y=(rand()%(30))+1;
+    printf("\nHa seleccionado el ejercicio 3.\n");
+	printf ("Posicion Juguete1. x:%d , y:%d\n",j1.x,j1.y);
+	printf("Posicion Juguete2. x:%d , y:%d\n",j2.x,j2.y);
+
+	//Primero el robot recoge el juguete que esté más cerca, calculo la distancia
+	d1=abs(robot.x-j1.x)+abs(robot.y-j1.y);
+	d2=abs(robot.x-j2.x)+abs(robot.y-j2.y);
+	printf("La distancia al Juguete1 es %d \n",d1);
+	printf("La distancia al Juguete2 es %d \n",d2);
+	printf("=======================================================================================\n");
+    //Paso 1: comprobar que juguete esta mas cerca del robot
+    if(d1<d2){ //si el juguete 1 esta mas cerca
+        target1=j1;
+        target2=j2;
+    }else{
+        target1=j2;
+        target2=j1;
+    }
+	printf("La posicion del target1 es (%d, %d)\n",target1.x,target1.y);
+	printf("MOV1	    X   Y\n");
+
+    //Paso 2: ir al target, llamo a la funcion que me va a devolver el robot (y por ello su posicion despues de moverse al target)
+    robot = movetoTarget(target1, robot);
+    printf("\nFin del movimiento 1.\n");
+    printf("=======================================================================================\n");
+    printf("La posicion del target2 es (%d, %d)\n",target2.x,target2.y);
+    printf("MOV2	    X   Y\n");
+
+    //Paso 3: el robot va (desde el target anterior- target 1) al otro juguete (que es mi nuevo target- target 2)
+    robot = movetoTarget(target2, robot);
+    printf("\nFin del movimiento 2.\n");
+    printf("=======================================================================================\n");
+}
+
+struct objeto movetoTarget(struct objeto target, struct objeto robot){
+    int h=0, k=0;
+    char diagonal, vertical, horizontal;
+    /*Dependiendo de que direccion tiene que tomar el robot, 
+    su posicion x aumentara (con h=0) o disminuira (con h=1) y su su posicion y aumentara (con k=0) o disminuira (con k=1) */
+    if(robot.x<target.x){
+        h=0;
+        horizontal= 'E';
+        if(robot.y<target.y){
+            k=0;
+            vertical='N';
+            diagonal='A';
+        }else{
+            k=1;
+            vertical='S';
+            diagonal='B';
+        }
+    }else{
+        h=1;
+        horizontal='W';
+        if(robot.y<target.y){
+            k=0;
+            vertical='N';
+            diagonal='D';
+        }else{
+            k=1;
+            vertical='S';
+            diagonal='C';
+        }
+    }
+
+    while(robot.x!=target.x || robot.y!=target.y){
+        //Condicion para moverme en diagonal
+        if(robot.x!=target.x && robot.y!=target.y){
+            robot.x=robot.x+pow(-1,h);
+            robot.y=robot.y+pow(-1,k);
+            printf("%c",diagonal);
+        //Condicion para moverme en vertical
+        }else if(robot.y!=target.y){
+            robot.y=robot.y+pow(-1,k);
+            printf("%c",vertical);
+        }else{
+            robot.x=robot.x+pow(-1,h);
+            printf("%c",horizontal);
+        }
+        printf("           %d  %d",robot.x, robot.y);
+        printf("\n");
+    }
+    printf("El robot se ha movido a la posicion (%d, %d)\n", robot.x, robot.y);
+    return robot;
+}
+
+//PROGRAMA 3 OPCIONAL
+struct objeto movetoTarget(struct objeto target, struct objeto robot);
+void dibujarPosActual(struct objeto robot, struct objeto j1, struct objeto j2);
+void ejercicio4(){
+    int d1, d2; 
+    //Declaración de variables con esta estructura 
+    struct objeto j1, j2, robot, target1, target2;
+    robot.x=15;
+    robot.y=15;
+
+    //Para darle a j1 y j2 valores aleatorios entre 0 y 30:
+	time_t t;
+	srand((unsigned) time(&t));
+	
+    j1.x=(rand()%(30))+1;
+    j1.y=(rand()%(30))+1;
+	j2.x=(rand()%(30))+1;
+	j2.y=(rand()%(30))+1;
+    printf("\nHa seleccionado el ejercicio 3 opcional.\n");
+	printf ("Posicion Juguete1. x:%d , y:%d\n",j1.x,j1.y);
+	printf("Posicion Juguete2. x:%d , y:%d\n",j2.x,j2.y);
+
+	//Primero el robot recoge el juguete que esté más cerca, calculo la distancia
+	d1=abs(robot.x-j1.x)+abs(robot.y-j1.y);
+	d2=abs(robot.x-j2.x)+abs(robot.y-j2.y);
+    dibujarPosActual(robot, j1, j2);
+	printf("La distancia al Juguete1 es %d \n",d1);
+	printf("La distancia al Juguete2 es %d \n",d2);
+	printf("=======================================================================================\n");
+    //Paso 1: comprobar que juguete esta mas cerca del robot
+    if(d1<d2){ //si el juguete 1 esta mas cerca
+        target1=j1;
+        target2=j2;
+    }else{
+        target1=j2;
+        target2=j1;
+    }
+	printf("La posicion del target1 es (%d, %d)\n",target1.x,target1.y);
+
+    //Paso 2: ir al target, llamo a la funcion que me va a devolver el robot (y por ello su posicion despues de moverse al target)
+    robot = movetoTarget(target1, robot);
+    dibujarPosActual(robot, target1, target2);
+    printf("Fin del movimiento 1.\n");
+    printf("=======================================================================================\n");
+    
+    printf("La posicion del target2 es (%d, %d)\n",target2.x,target2.y);
+    //Paso 3: el robot va (desde el target anterior- target 1) al otro juguete (que es mi nuevo target- target 2)
+    robot = movetoTarget(target2, robot);
+
+    //Paso 4: dibujo el area de juego
+    dibujarPosActual(robot, target2, target2);
+    printf("Fin del movimiento 2.\n");
+    printf("=======================================================================================\n");
+}
+
+void dibujarPosActual(struct objeto robot, struct objeto j1, struct objeto j2){
+    int i,j;
+    for(i=32;i>=1;i--){//Dibujo el cuadrado del juego 32x32 para que el interior del cuadrado sea 30x30
+        for(j=1;j<=32;j++){
+            if(i==1 || i==32){
+                printf("--");//La primera y ultima fila del cuadrado son todo guiones
+            }
+            else if(j==1 || j==32){//La primera y ultima columna del cuadrado son todo barras
+                printf("| ");
+            }
+            else if(i==robot.x && j==robot.y){//Si la posicion del robot coincide con i y j, se dibujara una X para representar al robot
+                printf("X ");
+            }
+            else if(i==j1.x && j==j1.y){//Si la posicion del juguete 1 coincide con i y j, se dibujara un 1 para representar al juguete 1
+                printf("1 ");
+            }
+            else if(i==j2.x && j==j2.y){//Si la posicion del juguete 2 coincide con i y j, se dibujara un 1 para representar al juguete 2
+                printf("2 ");
+            }else{
+                printf(". ");
+            }
+        }
+        printf("\n");
+    }
+}
